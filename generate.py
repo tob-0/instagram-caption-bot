@@ -54,10 +54,3 @@ def create_all(caption_file: str,bg_color=(255,255,255),fg_color=(0,0,0),size=(1
 
 
 create_all('./db_edited.txt',bg_color=(241,234,223),fg_color=(18,69,89))
-
-# with open('./db_edited.txt','r') as f:
-#     captions=f.readlines()
-#     for s in captions:
-#         print(split_text(s,5))
-#     f.close()
-# print(split_text("Pour arriver au bonheur, il faut commencer par se lever.",6))

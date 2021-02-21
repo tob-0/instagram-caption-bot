@@ -1,5 +1,6 @@
+schedule==1.0.0
 requests==2.22.0
-selenium==3.141.0
 pynput==1.7.3
+selenium==3.141.0
 beautifulsoup4==4.9.3
 Pillow==8.1.0

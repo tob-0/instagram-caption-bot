@@ -1,10 +1,10 @@
-from os import path
 from selenium import webdriver
 from pynput.keyboard import Controller
 from time import sleep
 from os.path import abspath
-from os import listdir
+from os import listdir, replace
 from random import randrange
+
 
 def handle_upload_window(filepath: str) -> None:
     kbd = Controller()
@@ -12,42 +12,51 @@ def handle_upload_window(filepath: str) -> None:
     kbd.type('\n')
 
 
-def get_creds(file: str,sep=':') -> list:
+def get_creds(file: str, sep=':') -> list:
     """Grab credentials from a file and format a list with them
     Args:
         file (str): file to grab the credentials from
-        sep (str, optional): separator for the pair. Defaults to ':'.
+        sep (str,  optional): separator for the pair. Defaults to ':'.
 
     Returns:
-        list: [username,password]
+        list: [username, password]
     """
-    f = open(file,'r')
+    f = open(file, 'r')
     creds = f.readline().split(sep)
     f.close()
     return [cred for cred in creds]
 
 
-def choose_image(dirpath:str,prefix='caption_',ext=".jpg") -> str:
+def choose_image(dirpath: str, prefix='caption_', ext=".jpg") -> str:
     """Return the path of a file in dirpath
 
     Args:
         dirpath (str): Path of the dir to look in
-        prefix (str, optional): prefix for the file. Defaults to 'caption_'.
-        ext (str, optional): extension for the file. Defaults to ".jpg".
+        prefix (str,  optional): prefix for the file. Defaults to 'caption_'.
+        ext (str,  optional): extension for the file. Defaults to ".jpg".
 
     Returns:
         str: path to the file
     """
     if dirpath[-1] != '/':
-        dirpath+='/'
-    return dirpath + prefix+"{:03}".format(randrange(len(listdir(dirpath))))+ext
+        dirpath += '/'
+    file_i = randrange(len(listdir(dirpath)))
+    return dirpath + prefix+"{:03}".format(file_i)+ext
 
 
-def set_image_used(path: str) -> None:
-    pass
+def set_image_used(filepath: str) -> None:
+    """Move passed filepath to the used folder
+
+    Args:
+        filepath (str): path to the file to move
+    """
+    fname = filepath.split('/')[-1]
+    from_path = abspath('caption_images/unused/'+fname)
+    to_path = abspath('caption_images/used/'+fname) 
+    replace(from_path, to_path)
 
 
-def post(username: str,password: str, filename: str,caption: str) -> None:
+def post(username: str, password: str,  filename: str, caption: str) -> None:
     """post image to instagram
 
     Args:
@@ -60,8 +69,8 @@ def post(username: str,password: str, filename: str,caption: str) -> None:
     mobile_emulation = { "deviceName": "iPhone X" }
     
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
-    driver = webdriver.Chrome('assets/webdrivers/chromedriver',options=chrome_options)
+    chrome_options.add_experimental_option("mobileEmulation",  mobile_emulation)
+    driver = webdriver.Chrome('assets/webdrivers/chromedriver', options=chrome_options)
     driver.get('https://www.instagram.com/accounts/login')
 
     ############# LOGIN ###############
@@ -117,8 +126,9 @@ def post(username: str,password: str, filename: str,caption: str) -> None:
 
 
 def main():
-    username,password=get_creds('.env')
+    username, password=get_creds('.env')
     path = abspath('caption_images/unused')
+    image = choose_image(path)
     caption="""Abonne toi au compte @vision_exaltee pour plus de contenu !
 Partage !
 .
@@ -127,8 +137,7 @@ Partage !
 .
 #visionexaltee #citation #citations #proverbe #dicton #humour #amour #pensee #image #inspiration #inspirations #phrase #phrasedujour #sensdelavie #image #tendances #texte"""
 
-    post(username,password,path,caption)
+    # post(username, password, path, caption)
+    set_image_used(image)
 
-
-if __name__=='__main__':
-    main()
+main()

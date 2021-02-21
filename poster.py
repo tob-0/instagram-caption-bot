@@ -123,6 +123,8 @@ def post(username: str, password: str,  filename: str, caption: str) -> None:
             share_button = btn
     share_button.click()
     sleep(10)
+    driver.close()
+    print(f'Posted {filename}.')
 
 
 

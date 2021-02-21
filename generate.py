@@ -1,7 +1,7 @@
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
-from os import makedirs
+from os import makedirs,mkdir
 
 def split_text(text: str, line_length: int):
     text = text.split(' ')
@@ -42,6 +42,7 @@ def create_imaged_caption(caption: str,save_name: str,bg_color=(255,255,255),fg_
 def create_all(caption_file: str,bg_color=(255,255,255),fg_color=(0,0,0),size=(1080,1080),font_path='assets/font/AbrilFatface-Regular.ttf',font_size=48):
     try:
         makedirs('./caption_images/unused',exist_ok=True)
+        mkdir('./caption_images/used')
     except:
         pass
     with open(caption_file,'r') as f:

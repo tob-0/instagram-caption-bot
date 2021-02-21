@@ -1,3 +1,4 @@
 .env
+.vscode
 caption_images
 __pycache__

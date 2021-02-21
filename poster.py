@@ -3,11 +3,14 @@ from selenium import webdriver
 from pynput.keyboard import Controller
 from time import sleep
 from os.path import abspath
+from os import listdir
+from random import randrange
 
 def handle_upload_window(filepath: str) -> None:
     kbd = Controller()
     kbd.type(filepath)
     kbd.type('\n')
+
 
 def get_creds(file: str,sep=':') -> list:
     """Grab credentials from a file and format a list with them
@@ -24,8 +27,24 @@ def get_creds(file: str,sep=':') -> list:
     return [cred for cred in creds]
 
 
-def choose_image(dirpath:str) -> str:
-    return
+def choose_image(dirpath:str,prefix='caption_',ext=".jpg") -> str:
+    """Return the path of a file in dirpath
+
+    Args:
+        dirpath (str): Path of the dir to look in
+        prefix (str, optional): prefix for the file. Defaults to 'caption_'.
+        ext (str, optional): extension for the file. Defaults to ".jpg".
+
+    Returns:
+        str: path to the file
+    """
+    if dirpath[-1] != '/':
+        dirpath+='/'
+    return dirpath + prefix+"{:03}".format(randrange(len(listdir(dirpath))))+ext
+
+
+def set_image_used(path: str) -> None:
+    pass
 
 
 def post(username: str,password: str, filename: str,caption: str) -> None:
@@ -97,10 +116,9 @@ def post(username: str,password: str, filename: str,caption: str) -> None:
     sleep(10)
 
 
-
 def main():
     username,password=get_creds('.env')
-    path = abspath('caption_images/unused/caption_009.jpg')
+    path = abspath('caption_images/unused')
     caption="""Abonne toi au compte @vision_exaltee pour plus de contenu !
 Partage !
 .

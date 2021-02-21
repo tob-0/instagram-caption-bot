@@ -4,7 +4,7 @@ from time import sleep
 from os.path import abspath
 from os import listdir, replace
 from random import randrange
-
+import schedule
 
 def handle_upload_window(filepath: str) -> None:
     kbd = Controller()
@@ -125,6 +125,7 @@ def post(username: str, password: str,  filename: str, caption: str) -> None:
     sleep(10)
 
 
+
 def main():
     username, password=get_creds('.env')
     path = abspath('caption_images/unused')
@@ -137,7 +138,12 @@ Partage !
 .
 #visionexaltee #citation #citations #proverbe #dicton #humour #amour #pensee #image #inspiration #inspirations #phrase #phrasedujour #sensdelavie #image #tendances #texte"""
 
-    # post(username, password, path, caption)
+    post(username, password, image, caption)
     set_image_used(image)
 
-main()
+schedule.every().day.at("08:00").do(main)
+schedule.every().day.at("21:00").do(main)
+
+while True:
+    schedule.run_pending()
+    sleep(1)

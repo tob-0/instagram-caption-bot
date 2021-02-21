@@ -4,16 +4,29 @@ from pynput.keyboard import Controller
 from time import sleep
 from os.path import abspath
 
-def handle_upload_window(filepath: str):
+def handle_upload_window(filepath: str) -> None:
     kbd = Controller()
     kbd.type(filepath)
     kbd.type('\n')
 
-def get_creds(file,sep=':'):
+def get_creds(file: str,sep=':') -> list:
+    """Grab credentials from a file and format a list
+    Args:
+        file (str): file to grab the credentials from
+        sep (str, optional): separator for the pair. Defaults to ':'.
+
+    Returns:
+        list: [username,password]
+    """
     f = open(file,'r')
     creds = f.readline().split(sep)
     f.close()
     return [cred for cred in creds]
+
+
+def choose_image(dirpath:str) -> str:
+    return
+
 
 def post(username: str,password: str, filename: str,caption: str) -> None:
     """post image to instagram
@@ -82,6 +95,8 @@ def post(username: str,password: str, filename: str,caption: str) -> None:
             share_button = btn
     share_button.click()
     sleep(10)
+
+
 
 def main():
     username,password=get_creds('.env')

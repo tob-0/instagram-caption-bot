@@ -32,11 +32,11 @@ def create_imaged_caption(caption: str,save_name: str,bg_color=(255,255,255),fg_
     font = ImageFont.truetype(font_path,font_size)
     w,h = draw.textsize(caption_text, font=font,)
     print(w,h)
-    while w>950:
+    while w>900:
         words-=1
         caption_text = split_text(caption,words)
         w,h = draw.textsize(caption_text, font=font,)
-    draw.multiline_text(((W-w)/2,(H-h)/2), caption_text, fg_color, font=font, align='left')
+    draw.multiline_text(((W-w)/2,(H-h)/2), caption_text, fg_color, font=font, align='center')
     img.save(save_name)
 
 def create_all(caption_file: str,bg_color=(255,255,255),fg_color=(0,0,0),size=(1080,1080),font_path='assets/font/AbrilFatface-Regular.ttf',font_size=48):
@@ -53,4 +53,7 @@ def create_all(caption_file: str,bg_color=(255,255,255),fg_color=(0,0,0),size=(1
         create_imaged_caption(caption,fname,bg_color=bg_color,fg_color=fg_color,size=size,font_path=font_path,font_size=font_size)
 
 
-create_all('./db_edited.txt',bg_color=(241,234,223),fg_color=(18,69,89))
+# create_all('./db_edited.txt',bg_color=(241,234,223),fg_color=(18,69,89))
+# create_all('./db_edited.txt',bg_color=(241,234,223),fg_color=(102,84,94))
+# create_all('./db_edited.txt',bg_color=(246,224,181),fg_color=(144, 144, 96))
+create_imaged_caption("Vision\nExaltée","./pp.jpg",bg_color=(241,234,223),fg_color=(18,69,89),font_size=124)

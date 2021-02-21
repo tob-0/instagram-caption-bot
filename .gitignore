@@ -1,2 +1,3 @@
 .env
 caption_images
+__pycache__

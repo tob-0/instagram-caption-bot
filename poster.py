@@ -36,6 +36,6 @@ onetap_btn.click()
 sleep(3)
 homescreen_btns = driver.find_elements_by_css_selector('div[role=dialog] button')
 for btn in homescreen_btns:
-    if btn.text == 'Accept':
+    if btn.text == 'Cancel':
         hs_b = btn
 hs_b.click()

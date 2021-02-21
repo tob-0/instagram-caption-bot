@@ -1,41 +1,101 @@
+from os import path
 from selenium import webdriver
+from pynput.keyboard import Controller
 from time import sleep
+from os.path import abspath
+
+def handle_upload_window(filepath: str):
+    kbd = Controller()
+    kbd.type(filepath)
+    kbd.type('\n')
+
 def get_creds(file,sep=':'):
     f = open(file,'r')
     creds = f.readline().split(sep)
     f.close()
     return [cred for cred in creds]
 
-username,password=get_creds('.env')
+def post(username: str,password: str, filename: str,caption: str) -> None:
+    """post image to instagram
 
-mobile_emulation = { "deviceName": "iPhone X" }
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
-driver = webdriver.Chrome('assets/webdrivers/chromedriver',options=chrome_options)
+    Args:
+        username (str): username or email of the account
+        password (str): password for said account
+        filename (str): path of the file to post
+        caption (str): caption for the post
+    """
 
-driver.get('https://www.instagram.com/accounts/login')
+    mobile_emulation = { "deviceName": "iPhone X" }
+    
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+    driver = webdriver.Chrome('assets/webdrivers/chromedriver',options=chrome_options)
+    driver.get('https://www.instagram.com/accounts/login')
 
-btns = driver.find_elements_by_css_selector('div div div div button')
-for btn in btns:
-    if btn.text == 'Accept':
-        b = btn
+    ############# LOGIN ###############
+    btns = driver.find_elements_by_css_selector('div div div div button')
+    for btn in btns:
+        if btn.text == 'Accept':
+            b = btn
 
-b.click()
-user_input = driver.find_element_by_name('username')
-pass_input = driver.find_element_by_name('password')
-submit = driver.find_element_by_css_selector('button[type=submit]')
+    b.click()
+    sleep(2)
+    user_input = driver.find_element_by_name('username')
+    pass_input = driver.find_element_by_name('password')
+    submit = driver.find_element_by_css_selector('button[type=submit]')
 
-user_input.send_keys(username)
-pass_input.send_keys(password)
-submit.click()
+    user_input.send_keys(username)
+    pass_input.send_keys(password)
+    submit.click()
 
-sleep(3)
-onetap_btn = driver.find_element_by_css_selector('main div div div button')
-onetap_btn.click()
+    sleep(5)
+    onetap_btn = driver.find_element_by_css_selector('main div div div button')
+    onetap_btn.click()
 
-sleep(3)
-homescreen_btns = driver.find_elements_by_css_selector('div[role=dialog] button')
-for btn in homescreen_btns:
-    if btn.text == 'Cancel':
-        hs_b = btn
-hs_b.click()
+    sleep(5)
+    homescreen_btns = driver.find_elements_by_css_selector('div[role=dialog] button')
+    for btn in homescreen_btns:
+        if btn.text == 'Cancel':
+            hs_b = btn
+    hs_b.click()
+
+    ############# POST ###############
+    sleep(1)
+    new_post = driver.find_element_by_css_selector('svg[aria-label="New Post"]')
+    new_post.click()
+    sleep(1)
+    handle_upload_window(filename)
+    sleep(3)
+    header_buttons_filters = driver.find_elements_by_css_selector('header div div button')
+    for btn in header_buttons_filters:
+        if btn.text == 'Next':
+            next_button = btn
+    next_button.click()
+    sleep(2)
+
+    caption_textarea = driver.find_element_by_css_selector('textarea[aria-label="Write a caption…"')
+    caption_textarea.send_keys(caption)
+
+    header_buttons_caption = driver.find_elements_by_css_selector('header div div button')
+    for btn in header_buttons_caption:
+        if btn.text == 'Share':
+            share_button = btn
+    share_button.click()
+    sleep(10)
+
+def main():
+    username,password=get_creds('.env')
+    path = abspath('caption_images/unused/caption_009.jpg')
+    caption="""Abonne toi au compte @vision_exaltee pour plus de contenu !
+Partage !
+.
+.
+.
+.
+#visionexaltee #citation #citations #proverbe #dicton #humour #amour #pensee #image #inspiration #inspirations #phrase #phrasedujour #sensdelavie #image #tendances #texte"""
+
+    post(username,password,path,caption)
+
+
+if __name__=='__main__':
+    main()

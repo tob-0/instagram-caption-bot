@@ -10,7 +10,7 @@ def handle_upload_window(filepath: str) -> None:
     kbd.type('\n')
 
 def get_creds(file: str,sep=':') -> list:
-    """Grab credentials from a file and format a list
+    """Grab credentials from a file and format a list with them
     Args:
         file (str): file to grab the credentials from
         sep (str, optional): separator for the pair. Defaults to ':'.
